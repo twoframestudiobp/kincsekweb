@@ -34,8 +34,8 @@ export async function sendMessageToGemini(history: { role: string, parts: { text
       },
     });
 
-    // Fixed: Accessing text property directly (it's a getter)
-    return response.text;
+    // Accessing text property directly (it's a getter, returns string | undefined)
+    return response.text || "Bocsi, most egy pillanatra elkalandoztam... Megismételnéd?";
   } catch (error) {
     console.error("Gemini API Error:", error);
     return "Jaj, most egy pillanatra elvesztettem a fonalat... De ne aggódj, hívj fel minket bátran a megadott számokon, és mindent megbeszélünk!";
@@ -58,12 +58,15 @@ export async function generateDrawingFromGemini(prompt: string): Promise<string 
       }
     });
 
-    // Fixed: Iterating through parts to find the image part as recommended
-    for (const part of response.candidates[0].content.parts) {
-      if (part.inlineData) {
-        return `data:image/png;base64,${part.inlineData.data}`;
+    // Fixed: Added safety check for candidates to avoid "possibly undefined" error
+    if (response.candidates && response.candidates.length > 0 && response.candidates[0].content) {
+      for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) {
+          return `data:image/png;base64,${part.inlineData.data}`;
+        }
       }
     }
+    
     return null;
   } catch (error) {
     console.error("Image Generation Error:", error);
