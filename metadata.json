@@ -1,0 +1,12 @@
+
+{
+  "name": "Kincsek Művészeti Klub - Modern React Pro",
+  "description": "Egyedi SEO-optimalizált, AI-támogatott művészeti klub weboldal React 19 és Tailwind CSS alapokon.",
+  "version": "1.2.0",
+  "author": "World-Class Senior Engineer",
+  "technologies": ["React 19", "Tailwind CSS", "Gemini AI", "TypeScript", "ESM"],
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
