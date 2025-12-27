@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import { FOUNDERS } from "../constants";
 
@@ -58,11 +57,17 @@ export async function generateDrawingFromGemini(prompt: string): Promise<string 
       }
     });
 
-    // Fixed: Added safety check for candidates to avoid "possibly undefined" error
-    if (response.candidates && response.candidates.length > 0 && response.candidates[0].content) {
-      for (const part of response.candidates[0].content.parts) {
-        if (part.inlineData) {
-          return `data:image/png;base64,${part.inlineData.data}`;
+    // Enhanced safety check to satisfy TypeScript's strict null checking
+    const candidates = response.candidates;
+    if (candidates && candidates.length > 0) {
+      const firstCandidate = candidates[0];
+      const content = firstCandidate.content;
+      
+      if (content && content.parts) {
+        for (const part of content.parts) {
+          if (part.inlineData) {
+            return `data:image/png;base64,${part.inlineData.data}`;
+          }
         }
       }
     }
